@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <title>The Psychic Game</title>
+    <script>
+        document.addEventListener("keyup", (event) => {
+            theKeyName = event.key;
+            theGame.respondToKeyUp();
+        });
+        theGame = {
+            theTitle: "The Psychic Game",
+            theLetterToGuess: "",
+            theWins: 0,
+            theLosses: 0,
+            theGuessesRemaining: 10,
+            theLettersGuessed: [],
+            theValidGuesses: "abcdefghijklmnopqrstuvwxyz",
+
+            generateALetter: function() {
+                theRandomNumber = Math.floor(Math.random() * (+25 - +0)) + +0;
+                this.theLetterToGuess = this.theValidGuesses.split("")[theRandomNumber];
+                console.log("letter to guess: " + this.theLetterToGuess);
+                this.theGuessesRemaining = 10;
+                this.theLettersGuessed = [];
+                this.updateAllDisplays();
+            },
+            respondToKeyUp: function() {
+                if (this.theLetterToGuess == "") {
+                    this.generateALetter();
+                } else {
+                    if (this.theValidGuesses.includes(theKeyName.toLowerCase())) {
+                        this.theLettersGuessed.push(" " + theKeyName.toLowerCase());
+                        this.theGuessesRemaining--;
+                        this.updateDisplay("thelettersguessed", "Your Guesses So Far: " + this.theLettersGuessed);
+                        if (this.theLetterToGuess == (theKeyName.toLowerCase())) {
+                            alert("You won that round!");
+                            this.theWins++;
+                            this.endTheRound();
+                        } else {
+                            if (this.theGuessesRemaining == 0) {
+                                alert("You lost that round.");
+                                this.theLosses++;
+                                this.endTheRound();
+                            }
+                        }
+                    }
+                }
+            },
+
+            updateDisplay: function(theID, theMessage) {
+                document.getElementById(theID).innerHTML = theMessage;
+            },
+
+            updateAllDisplays: function() {
+                this.updateDisplay("thewins", "Wins: " + this.theWins);
+                this.updateDisplay("thelosses", "Losses: " + this.theLosses);
+                this.updateDisplay("theguessesleft", "Guesses remaining: " + this.theGuessesRemaining);
+                this.updateDisplay("thelettersguessed", "Letters guessed so far: " + this.theLettersGuessed);
+            },
+
+            endTheRound: function() {
+                this.theLetterToGuess = "";
+                this.updateAllDisplays();
+                this.generateALetter();
+            },
+        }
+    </script>
+</head>
+
+<body>
+    <h1>The Psychic Game</h1>
+    <p><em><strong>Guess what letter I'm thinking of - press any key to start!</strong></em></p>
+    <p id="thewins"></p>
+    <p id="thelosses"></p>
+    <p id="theguessesleft"></p>
+    <p id="thelettersguessed"></p>
+</body>
+
+</html>
